@@ -13,10 +13,10 @@ Navigate to it inside your Command Prompt (it's usually inside C:\Users\USERNAME
 
 Run the following replacing USERNAME and FOLDERNAME
 
-`
+```
 cd \Users\USERNAME\AndroidStudioProjects\FOLDERNAME
 git init
 git remote add origin https://github.com/nylahtay/CIS240-LocationSensors.git
 git fetch
 git pull
-`
+```
