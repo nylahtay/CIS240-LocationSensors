@@ -62,9 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Check to see if you have permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // calling ActivityCompat#requestPermissions here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
+            // calling ActivityCompat#requestPermissions here to request the missing permissions
 
             String errorString = "Permission Denied";
             Toast.makeText(MainActivity.this, "errorString", Toast.LENGTH_LONG);
@@ -76,14 +74,17 @@ public class MainActivity extends AppCompatActivity {
 
             return;
         }
+
+        //This will check the phones location
         fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull Task<Location> task) {
                 //Initialize location
                 Location location = task.getResult();
                 if (location != null) {
+                    //Location isn't null
                     try {
-                        //initialze the geoCoder
+                        //initialize the geoCoder
                         Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
 
                         //Initialize address list
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
                 }
                 else {
+                    //location returned null from task.getResult()
                     textView1.setText("Location is set to NULL on this device");
                 }
             }
