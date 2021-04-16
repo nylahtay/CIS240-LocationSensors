@@ -2,10 +2,10 @@
 If you don't have git installed for your command line, here is Ms. Markley's video on installing it
 https://www.youtube.com/watch?v=XrE6uWJDW5U
 
-##Accept your invitation
+## Accept your invitation
 https://github.com/nylahtay/CIS240-LocationSensors/invitations
 
-##Project Setup
+## Project Setup
 You will want to follow the step to get this setup.
 
 Create an empty folder inside your AndroidStudioProjects and name it anything you would like. (I named my folder LocationSensorsGroupProject)
