@@ -1,4 +1,6 @@
 # CIS240-LocationSensors
+This is the group project for CIS-240 for the location sensors project. 
+
 If you don't have git installed for your command line, here is Ms. Markley's video on installing it
 https://www.youtube.com/watch?v=XrE6uWJDW5U
 
