@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
             // calling ActivityCompat#requestPermissions here to request the missing permissions
 
             String errorString = "Permission Denied";
-            Toast.makeText(MainActivity.this, "errorString", Toast.LENGTH_LONG);
+            Toast.makeText(MainActivity.this, errorString, Toast.LENGTH_LONG).show();
             textView1.setText(errorString);
 
             //this will ask the user for permission
@@ -107,7 +107,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     //location returned null from task.getResult()
-                    textView1.setText("Location is set to NULL on this device");
+                    String errorString = "Location is set to NULL on this device";
+                    Toast.makeText(MainActivity.this, errorString, Toast.LENGTH_LONG).show();
+                    textView1.setText(errorString);
                 }
             }
         });
