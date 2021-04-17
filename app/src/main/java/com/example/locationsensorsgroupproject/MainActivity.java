@@ -2,7 +2,6 @@ package com.example.locationsensorsgroupproject;
 
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
