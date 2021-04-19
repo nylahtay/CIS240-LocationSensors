@@ -22,5 +22,3 @@ git remote add origin https://github.com/nylahtay/CIS240-LocationSensors.git
 git fetch
 git checkout main
 ```
-
-carl's test commit
