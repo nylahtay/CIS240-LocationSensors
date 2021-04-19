@@ -36,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
         //Assign the variables
         TextViewCurrentLocation = findViewById(R.id.txtLocation);
         TextViewDestinationLocation = findViewById(R.id.txtDestination);
-        TextViewDistance = findViewById(R.id.txtDistance);
+        TextViewDistance = findViewById(R.id.txtResults);
+        btLocation = findViewById(R.id.submitBtn);
 
 
 
@@ -46,22 +47,20 @@ public class MainActivity extends AppCompatActivity {
         //this will populate the lat2 and lon2 with the phone's location onCreate;
         getLocation();
 
-        btLocation.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                getLocation();
-            }
-        });
 
     }
 
     public void submitForm(View V){
         TextView locationRequested = findViewById(R.id.locationRequested);
         String location =  locationRequested.getText().toString();
-        TextViewDestinationLocation.setText(getLatLongFromString(location));
-        TextViewDistance.setText(distance(lon1, lat1, lon2, lat2)+" Miles Away");
-        TextViewCurrentLocation.setText(lat2+", "+ lon2);
+        String destCoord = getLatLongFromString(location);
+        TextViewDestinationLocation.setText(destCoord);
+        if(destCoord == "Could Not Find Location"){
+            TextViewDistance.setText("Could Not Find Location");
+
+        }else{
+            TextViewDistance.setText(String.format("%.1f",distance(lon1, lat1, lon2, lat2))+" Miles Away");
+        }
     }
 
 
@@ -106,10 +105,11 @@ public class MainActivity extends AppCompatActivity {
             //return "Lat/Lon: "+address.getLatitude() +" "+address.getLongitude();
             lat1 = address.getLatitude();
             lon1 = address.getLongitude();
-            return lat1+", "+lon1;
+            return String.format("%.4f",lat1)+", "+String.format("%.4f",lon1);
 
         }catch(Exception e){
-            return e.toString();
+            Toast.makeText(this, "Could not find location", Toast.LENGTH_SHORT).show();
+            return "Could Not Find Location";
         }
 
     }
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                         );
 
                         //Set latitude on TextView
-                        TextViewCurrentLocation.setText(addresses.get(0).getLatitude() + "," + addresses.get(0).getLongitude());
+                        TextViewCurrentLocation.setText(String.format("%.4f", addresses.get(0).getLatitude()) + "," + String.format("%.4f", addresses.get(0).getLongitude()));
 
                         //sending the location to the interface GPSCallback
                         lat2 = addresses.get(0).getLatitude();
