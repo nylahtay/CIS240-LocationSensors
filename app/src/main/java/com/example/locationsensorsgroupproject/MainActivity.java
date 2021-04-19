@@ -1,32 +1,44 @@
 package com.example.locationsensorsgroupproject;
 
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int ACCESS_FINE_LOCATION = 44;
     //Initialize variables
     TextView TextViewCurrentLocation, TextViewDestinationLocation, TextViewDistance;
     FusedLocationProviderClient fusedLocationProviderClient;
     Button btLocation;
     Double lat1, lon1, lat2, lon2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,46 +46,70 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Assign the variables
+
         TextViewCurrentLocation = findViewById(R.id.txtLocation);
         TextViewDestinationLocation = findViewById(R.id.txtDestination);
         TextViewDistance = findViewById(R.id.txtResults);
         btLocation = findViewById(R.id.submitBtn);
 
 
-
         //Initialize fusedLocationProviderClient
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        //this will populate the lat2 and lon2 with the phone's location onCreate;
-        getLocation();
 
-
-    }
-
-    public void submitForm(View V){
-        TextView locationRequested = findViewById(R.id.locationRequested);
-        String location =  locationRequested.getText().toString();
-        String destCoord = getLatLongFromString(location);
-        TextViewDestinationLocation.setText(destCoord);
-        if(destCoord == "Could Not Find Location"){
-            TextViewDistance.setText("Could Not Find Location");
-
-        }else{
-            TextViewDistance.setText(String.format("%.1f",distance(lon1, lat1, lon2, lat2))+" Miles Away");
+        //Check to see if you have permission, if not request it. This will ask the user for permission
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // calling ActivityCompat#requestPermissions here to request the missing permissions
+            // to handle the case where the user grants the permission.
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
         }
     }
 
+    //This method is called after the user accepts or declines the permission request for location.
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        switch (requestCode) {
+            case ACCESS_FINE_LOCATION:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getLocation();
+                }  else {
+                    // Explain to the user that the feature is unavailable because
+                    // the features requires a permission that the user has denied.
+                    // At the same time, respect the user's decision. Don't link to
+                    // system settings in an effort to convince the user to change
+                    // their decision.
+                    TextViewCurrentLocation.setText("Location permission is required to use this app.");
 
-    private double distance(double longitude1, double latitude1, double longitude2, double latitude2){
-        double ddlon1 = Math.toRadians(longitude1);
-        double ddlon2 = Math.toRadians(longitude2);
-        double ddlat1 = Math.toRadians(latitude1);
-        double ddlat2 = Math.toRadians(latitude2);
+                }
+                return;
+        }
+        // Other 'case' lines to check for other
+        // permissions this app might request.
+    }
 
-        double dlon = ddlon2 - ddlon1;
-        double dlat = ddlat2 - ddlat1;
+
+
+    
+    public void submitForm(View V){
+        TextView locationRequested = findViewById(R.id.locationRequested);
+        String location =  locationRequested.getText().toString();
+        TextView results = findViewById(R.id.results);
+        results.setText("Results: "+getLatLongFromString(location));
+    }
+
+    private double distance(double longitude1,double latitude1, double longitude2,double latitude2){
+        double lon1 = Math.toRadians(longitude1);
+        double lon2 = Math.toRadians(longitude2);
+        double  lat1 = Math.toRadians(latitude1);
+        double  lat2 = Math.toRadians(latitude2);
+
+        double dlon = lon2 - lon1;
+        double dlat = lat2 - lat1;
         double a = Math.pow(Math.sin(dlat / 2), 2)
-                + Math.cos(ddlat1) * Math.cos(ddlat2)
+                + Math.cos(lat1) * Math.cos(lat2)
                 * Math.pow(Math.sin(dlon / 2),2);
 
         double c = 2 * Math.asin(Math.sqrt(a));
@@ -114,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     private void getLocation() {
 
         //Check to see if you have permission
@@ -123,10 +160,6 @@ public class MainActivity extends AppCompatActivity {
             String errorString = "Permission Denied";
             Toast.makeText(MainActivity.this, errorString, Toast.LENGTH_LONG).show();
             TextViewCurrentLocation.setText(errorString);
-
-            //this will ask the user for permission
-            // to handle the case where the user grants the permission.
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
             return;
         }
 
@@ -150,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
                         //Set latitude on TextView
                         TextViewCurrentLocation.setText(String.format("%.4f", addresses.get(0).getLatitude()) + "," + String.format("%.4f", addresses.get(0).getLongitude()));
 
+
                         //sending the location to the interface GPSCallback
                         lat2 = addresses.get(0).getLatitude();
                         lon2 = addresses.get(0).getLongitude();
@@ -165,10 +199,9 @@ public class MainActivity extends AppCompatActivity {
                     String errorString = "Location is set to NULL on this device";
                     Toast.makeText(MainActivity.this, errorString, Toast.LENGTH_LONG).show();
                     TextViewCurrentLocation.setText(errorString);
+
                 }
             }
         });
     }
-
-
 }

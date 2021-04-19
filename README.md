@@ -1,4 +1,6 @@
 # CIS240-LocationSensors
+This is the group project for CIS-240 for the location sensors project. 
+
 If you don't have git installed for your command line, here is Ms. Markley's video on installing it
 https://www.youtube.com/watch?v=XrE6uWJDW5U
 
@@ -20,5 +22,3 @@ git remote add origin https://github.com/nylahtay/CIS240-LocationSensors.git
 git fetch
 git checkout main
 ```
-
-carl's test commit
