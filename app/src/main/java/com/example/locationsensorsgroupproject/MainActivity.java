@@ -77,12 +77,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Radius of earth in kilometers. Use 3956
         // for miles
-        double r = 6371;
-
+        //double r = 6371;
+        double r = 3956;
         // calculate the result
         double distance = c * r;
 
-        return Math.floor(distance*.621371);
+        return Math.floor(distance);
     }
 
 
@@ -97,19 +97,8 @@ public class MainActivity extends AppCompatActivity {
         try{
             Address address = addresses.get(0);
 
-
             // output the gps as lat/lon
             //return "Lat/Lon: "+address.getLatitude() +" "+address.getLongitude();
-
-            // output distance
-            // create a second location
-            // this is the white house in washington dc
-
-
-
-            //using getLocation to update the lat2 and lon2
-            getLocation();
-
 
             return "Distance to the White House is "+distance(address.getLongitude(),  address.getLatitude(), lon2, lat2)+" miles";
 
