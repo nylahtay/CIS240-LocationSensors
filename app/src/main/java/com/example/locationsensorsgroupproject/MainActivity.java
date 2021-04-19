@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int ACCESS_FINE_LOCATION = 44;
     //Initialize variables
     TextView textView1, textView2, textView3, textView4, textView5;
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -40,20 +41,46 @@ public class MainActivity extends AppCompatActivity {
         //Assign the variables
         textView1 = findViewById(R.id.textView_location);
 
-
-
         //Initialize fusedLocationProviderClient
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        //this will populate the lat2 and lon2 with the phone's location onCreate;
-        getLocation();
 
+        //Check to see if you have permission, if not request it. This will ask the user for permission
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // calling ActivityCompat#requestPermissions here to request the missing permissions
+            // to handle the case where the user grants the permission.
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
+        }
+    }
 
+    //This method is called after the user accepts or declines the permission request for location.
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        switch (requestCode) {
+            case ACCESS_FINE_LOCATION:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getLocation();
+                }  else {
+                    // Explain to the user that the feature is unavailable because
+                    // the features requires a permission that the user has denied.
+                    // At the same time, respect the user's decision. Don't link to
+                    // system settings in an effort to convince the user to change
+                    // their decision.
+                    textView1.setText("Location permission is required to use this app.");
+
+                }
+                return;
+        }
+        // Other 'case' lines to check for other
+        // permissions this app might request.
     }
 
 
 
-
+    
     public void submitForm(View V){
         TextView locationRequested = findViewById(R.id.locationRequested);
         String location =  locationRequested.getText().toString();
@@ -120,10 +147,12 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, errorString, Toast.LENGTH_LONG).show();
             textView1.setText(errorString);
 
+
+            /*
             //this will ask the user for permission
             // to handle the case where the user grants the permission.
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
-
+             */
             return;
         }
 
