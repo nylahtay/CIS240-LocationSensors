@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -28,9 +27,9 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     //Initialize variables
-    Button btLocation;
     TextView textView1, textView2, textView3, textView4, textView5;
     FusedLocationProviderClient fusedLocationProviderClient;
+    double lat1, lat2, lon1,lon2;
 
 
     @Override
@@ -39,25 +38,89 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Assign the variables
-        btLocation = findViewById(R.id.button_location);
-        textView1 = findViewById(R.id.textView);
+        textView1 = findViewById(R.id.textView_location);
+
+
 
         //Initialize fusedLocationProviderClient
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        btLocation.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                    getLocation();
-            }
-        });
+        //this will populate the lat2 and lon2 with the phone's location onCreate;
+        getLocation();
 
 
     }
 
-    //Had to add the @supressLint for this since we are doing the permission check above
-    //@SuppressLint("MissingPermission")
+
+
+
+    public void submitForm(View V){
+        TextView locationRequested = findViewById(R.id.locationRequested);
+        String location =  locationRequested.getText().toString();
+        TextView results = findViewById(R.id.results);
+        results.setText("Results: "+getLatLongFromString(location));
+    }
+
+    private double distance(double longitude1,double latitude1, double longitude2,double latitude2){
+        double lon1 = Math.toRadians(longitude1);
+        double lon2 = Math.toRadians(longitude2);
+        double  lat1 = Math.toRadians(latitude1);
+        double  lat2 = Math.toRadians(latitude2);
+
+        double dlon = lon2 - lon1;
+        double dlat = lat2 - lat1;
+        double a = Math.pow(Math.sin(dlat / 2), 2)
+                + Math.cos(lat1) * Math.cos(lat2)
+                * Math.pow(Math.sin(dlon / 2),2);
+
+        double c = 2 * Math.asin(Math.sqrt(a));
+
+        // Radius of earth in kilometers. Use 3956
+        // for miles
+        double r = 6371;
+
+        // calculate the result
+        double distance = c * r;
+
+        return Math.floor(distance*.621371);
+    }
+
+
+    public String getLatLongFromString(String location){
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses = null;
+        try {
+            addresses = geocoder.getFromLocationName(location, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            Address address = addresses.get(0);
+
+
+            // output the gps as lat/lon
+            //return "Lat/Lon: "+address.getLatitude() +" "+address.getLongitude();
+
+            // output distance
+            // create a second location
+            // this is the white house in washington dc
+
+
+
+            //using getLocation to update the lat2 and lon2
+            getLocation();
+
+
+            return "Distance to the White House is "+distance(address.getLongitude(),  address.getLatitude(), lon2, lat2)+" miles";
+
+        }catch(Exception e){
+            return "Could not locate";
+        }
+
+    }
+
+
+
     private void getLocation() {
 
         //Check to see if you have permission
@@ -99,6 +162,12 @@ public class MainActivity extends AppCompatActivity {
                                         + " Longitude:" + addresses.get(0).getLongitude() + " Latitude:" + addresses.get(0).getLatitude()
 
                         ));
+                        String coordinates = addresses.get(0).getLatitude() + "," + addresses.get(0).getLongitude();
+
+                        //sending the location to the interface GPSCallback
+                        lat2 = addresses.get(0).getLatitude();
+                        lon2 = addresses.get(0).getLongitude();
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -114,4 +183,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 }
