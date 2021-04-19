@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< Updated upstream
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+=======
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+>>>>>>> Stashed changes
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/llayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+<<<<<<< Updated upstream
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -45,6 +51,94 @@
             android:id="@+id/results"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+=======
+    android:background="#96C8EF"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/location"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/locationRequested"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:ems="10"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:onClick="submitForm"
+        android:text="get distance to your destination"
+        app:backgroundTint="#4B5BB5" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/orbitron_bold"
+        android:text="@string/results"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/destCoord" />
+
+    <TextView
+        android:id="@+id/txtDestination"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/locationCoord" />
+
+    <TextView
+        android:id="@+id/txtLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/distance" />
+
+    <TextView
+        android:id="@+id/txtDistance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+>>>>>>> Stashed changes
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

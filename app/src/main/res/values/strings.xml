@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Location Sensors Group Project</string>
+    <string name="location">Enter a location:</string>
+    <string name="destCoord">Destination Coordinates</string>
+    <string name="locationCoord">Location Coordinates</string>
+    <string name="distance">Distance</string>
+    <string name="results">Results:</string>
 </resources>
