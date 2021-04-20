@@ -63,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
             // to handle the case where the user grants the permission.
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
         }
+        else{
+            getLocation();
+        }
     }
 
     //This method is called after the user accepts or declines the permission request for location.
@@ -92,12 +95,18 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    
+
     public void submitForm(View V){
         TextView locationRequested = findViewById(R.id.locationRequested);
         String location =  locationRequested.getText().toString();
-        TextView results = findViewById(R.id.results);
-        results.setText("Results: "+getLatLongFromString(location));
+        String destCoord = getLatLongFromString(location);
+        TextViewDestinationLocation.setText(destCoord);
+        if(destCoord == "Could Not Find Location"){
+            TextViewDistance.setText("Could Not Find Location");
+
+        }else{
+            TextViewDistance.setText(String.format("%.1f",distance(lon1, lat1, lon2, lat2))+" Miles Away");
+        }
     }
 
     private double distance(double longitude1,double latitude1, double longitude2,double latitude2){
