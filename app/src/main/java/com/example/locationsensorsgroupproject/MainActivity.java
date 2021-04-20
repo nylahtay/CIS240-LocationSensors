@@ -3,9 +3,11 @@ package com.example.locationsensorsgroupproject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.ShareActionProvider;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -13,8 +15,11 @@ import android.location.Location;
 import android.os.Bundle;
 
 import android.text.Html;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,39 +63,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Check to see if you have permission, if not request it. This will ask the user for permission
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // calling ActivityCompat#requestPermissions here to request the missing permissions
-            // to handle the case where the user grants the permission.
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
-        }
-        else{
+        //if checkForLocationPermission is true, then permission is already granted, otherwise the method will ask the user for permission
+        if (checkForLocationPermission()) {
             getLocation();
         }
-    }
-
-    //This method is called after the user accepts or declines the permission request for location.
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
-        switch (requestCode) {
-            case ACCESS_FINE_LOCATION:
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getLocation();
-                }  else {
-                    // Explain to the user that the feature is unavailable because
-                    // the features requires a permission that the user has denied.
-                    // At the same time, respect the user's decision. Don't link to
-                    // system settings in an effort to convince the user to change
-                    // their decision.
-                    TextViewCurrentLocation.setText("Location permission is required to use this app.");
-
-                }
-                return;
-        }
-        // Other 'case' lines to check for other
-        // permissions this app might request.
     }
 
 
@@ -160,6 +136,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+    //check for location permission
+    //if checkForLocationPermission is true, then permission is already granted, otherwise the method will ask the user for permission
+    private boolean checkForLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // calling ActivityCompat#requestPermissions here to request the missing permissions
+            // to handle the case where the user grants the permission.
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    //This method is called after the user accepts or declines the permission request for location.
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        switch (requestCode) {
+            case ACCESS_FINE_LOCATION:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getLocation();
+                }  else {
+                    // Explain to the user that the feature is unavailable because
+                    // the features requires a permission that the user has denied.
+                    // At the same time, respect the user's decision. Don't link to
+                    // system settings in an effort to convince the user to change
+                    // their decision.
+                    TextViewCurrentLocation.setText("Location permission is required to use this app.");
+
+                }
+                return;
+        }
+        // Other 'case' lines to check for other
+        // permissions this app might request.
+    }
+
+
     private void getLocation() {
 
         //Check to see if you have permission
@@ -212,5 +229,43 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+
+
+
+    //This is the inflator for adding the share button
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+
+        getMenuInflater().inflate(R.menu.main, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    //this method will run when a menu item is selected
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(checkForLocationPermission()) {
+            switch (item.getItemId()) {
+                case R.id.mShare:
+                    Intent i = new Intent(
+                            Intent.ACTION_SEND
+                    );
+                    i.setType("text/plain");
+                    i.putExtra(
+                            android.content.Intent.EXTRA_TEXT, String.format("%.4f", lat2) + ", " + String.format("%.4f", lon2) + "\n https://google.com/maps/search/" + String.format("%.4f", lat2) + "," + String.format("%.4f", lon2)
+                    );
+                    startActivity(Intent.createChooser(
+                            i,
+                            "Share Via"
+                    ));
+                    break;
+            }
+        }
+
+        Toast.makeText(getApplicationContext(), "You clicked on menu share", Toast.LENGTH_SHORT).show();
+        return super.onOptionsItemSelected(item);
+
     }
 }
