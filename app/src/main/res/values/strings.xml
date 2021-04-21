@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Location Sensors Group Project</string>
+    <string name="app_name">Curiosity</string>
     <string name="location">Enter a location:</string>
     <string name="destCoord">Destination Location:</string>
     <string name="locationCoord">Current Location:</string>
