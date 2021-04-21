@@ -44,10 +44,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setLogo(R.mipmap.ic_launcher);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
-
-
         //Assign the variables
-
         TextViewCurrentLocation = findViewById(R.id.txtLocation);
         TextViewDestinationLocation = findViewById(R.id.txtDestination);
         TextViewDistance = findViewById(R.id.txtResults);
@@ -81,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //this method will calculate the distance between the two coordinates given and return the distance in miles.
     private double distance(double longitude1,double latitude1, double longitude2,double latitude2){
         double lon1 = Math.toRadians(longitude1);
         double lon2 = Math.toRadians(longitude2);
@@ -105,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         return Math.floor(distance);
     }
 
-
+    //This gets the latitude and longitude from a string location
     public String getLatLongFromString(String location){
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         List<Address> addresses = null;
@@ -116,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
         }
         try{
             Address address = addresses.get(0);
-
 
             // output the gps as lat/lon
             //return "Lat/Lon: "+address.getLatitude() +" "+address.getLongitude();
@@ -205,23 +202,19 @@ public class MainActivity extends AppCompatActivity {
                         //Set latitude on TextView
                         TextViewCurrentLocation.setText(String.format("%.4f", addresses.get(0).getLatitude()) + "," + String.format("%.4f", addresses.get(0).getLongitude()));
 
-
-                        //sending the location to the interface GPSCallback
+                        //sending the location to the lat2 and lon2 variables
                         lat2 = addresses.get(0).getLatitude();
                         lon2 = addresses.get(0).getLongitude();
 
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
-
                 }
                 else {
                     //location returned null from task.getResult()
                     String errorString = "Location is set to NULL on this device";
                     Toast.makeText(MainActivity.this, errorString, Toast.LENGTH_LONG).show();
                     TextViewCurrentLocation.setText(errorString);
-
                 }
             }
         });
@@ -230,12 +223,10 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    //This is the inflator for adding the share button
+    //This is the inflater for adding the share button
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-
         getMenuInflater().inflate(R.menu.main, menu);
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -245,23 +236,17 @@ public class MainActivity extends AppCompatActivity {
         if(checkForLocationPermission()) {
             switch (item.getItemId()) {
                 case R.id.mShare:
-                    Intent i = new Intent(
-                            Intent.ACTION_SEND
-                    );
+                    Intent i = new Intent( Intent.ACTION_SEND );
                     i.setType("text/plain");
                     i.putExtra(
-                            android.content.Intent.EXTRA_TEXT, String.format("%.4f", lat2) + ", " + String.format("%.4f", lon2) + "\n https://google.com/maps/search/" + String.format("%.4f", lat2) + "," + String.format("%.4f", lon2)
+                            android.content.Intent.EXTRA_TEXT,
+                            String.format("%.4f", lat2) + ", " + String.format("%.4f", lon2) + "\n https://google.com/maps/search/" + String.format("%.4f", lat2) + "," + String.format("%.4f", lon2)
                     );
-                    startActivity(Intent.createChooser(
-                            i,
-                            "Share Via"
-                    ));
+                    startActivity(Intent.createChooser( i, "Share Via"));
                     break;
             }
         }
-
         Toast.makeText(getApplicationContext(), "You clicked on menu share", Toast.LENGTH_SHORT).show();
         return super.onOptionsItemSelected(item);
-
     }
 }
